@@ -4,51 +4,77 @@ import { useState } from 'react';
 import { cn } from '../lib/utils';
 import { ArrowUpRight, X, Image as ImageIcon } from 'lucide-react';
 
-// Load all image files (including converted floor plans)
-const projectFiles = import.meta.glob('../assets/portfolio/floorplans_mep/*/*.(png|jpg|jpeg)', {
+// Helper to process project files
+const processProjects = (files: Record<string, any>, category: string, defaultImageSize: string = 'md:col-span-1 md:row-span-1') => {
+    return Object.entries(files).reduce((acc, [path, url]) => {
+        const parts = path.split('/');
+        const folderName = parts[parts.length - 2];
+        const fileName = parts[parts.length - 1];
+
+        if (!acc[folderName]) {
+            acc[folderName] = {
+                id: folderName,
+                title: folderName,
+                category: category,
+                image: url as string, // Default cover is the first image found
+                size: defaultImageSize,
+                files: []
+            };
+        }
+
+        acc[folderName].files.push({
+            name: decodeURIComponent(fileName).replace(/\.(png|jpg|jpeg)$/i, ''),
+            url: url as string,
+            type: 'image'
+        });
+
+        return acc;
+    }, {} as Record<string, any>);
+};
+
+// Load Floor Plan files
+const floorPlanFiles = import.meta.glob('../assets/portfolio/floorplans_mep/*/*.(png|jpg|jpeg)', {
     eager: true,
     query: '?url',
     import: 'default'
 });
 
-// Group files by project (folder name)
-const floorPlanProjects = Object.entries(projectFiles).reduce((acc, [path, url]) => {
-    const parts = path.split('/');
-    const folderName = parts[parts.length - 2];
-    const fileName = parts[parts.length - 1];
+// Load Interior Design files
+const interiorFiles = import.meta.glob('../assets/portfolio/interiors/*/*.(png|jpg|jpeg)', {
+    eager: true,
+    query: '?url',
+    import: 'default'
+});
 
-    if (!acc[folderName]) {
-        acc[folderName] = {
-            id: folderName,
-            title: folderName, // You might want to map folder names to nicer titles later
-            category: 'Floor Plans & MEP',
-            image: url as string, // Use the first found image as the cover
-            size: 'md:col-span-1 md:row-span-1',
-            files: []
-        };
-    }
-
-    acc[folderName].files.push({
-        name: decodeURIComponent(fileName).replace(/\.(png|jpg|jpeg)$/i, ''), // Clean name
-        url: url as string,
-        type: 'image'
-    });
-
-    return acc;
-}, {} as Record<string, any>);
+const floorPlanProjects = processProjects(floorPlanFiles, 'Floor Plans & MEP');
+const interiorProjects = processProjects(interiorFiles, 'Interior Designs');
 
 const existingProjects = [
     { id: 1, title: 'Azure Skyline', category: 'Architectural', image: 'https://images.unsplash.com/photo-1600596542815-2a4d9fdd4070?auto=format&fit=crop&q=80&w=800', size: 'md:col-span-2 md:row-span-2' },
-    { id: 2, title: 'Vertex Office', category: 'Interior Designs', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800', size: 'md:col-span-1 md:row-span-1' },
+    // Removed hardcoded Interiors to prefer dynamic ones if needed, or keep them if they are distinct. 
+    // Keeping them for now as they have specific data.
     { id: 3, title: 'Cube Residence', category: 'Architectural', image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800', size: 'md:col-span-1 md:row-span-2' },
-    { id: 4, title: 'Origin Studio', category: 'Interior Designs', image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=800', size: 'md:col-span-1 md:row-span-1' },
     { id: 5, title: 'Flux Museum', category: 'Fluid Structures', image: 'https://images.unsplash.com/photo-1577493340887-b7bfff550145?auto=format&fit=crop&q=80&w=800', size: 'md:col-span-2 md:row-span-1' },
     { id: 6, title: 'Neo Villa', category: 'Architectural', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800', size: 'md:col-span-1 md:row-span-1' },
     { id: 7, title: 'Zenith Tower', category: 'Fluid Structures', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800', size: 'md:col-span-1 md:row-span-2' },
     { id: 8, title: 'Echo Pavilion', category: 'Fluid Structures', image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=800', size: 'md:col-span-2 md:row-span-2' },
 ];
 
-const allProjects = [...existingProjects, ...Object.values(floorPlanProjects)];
+// Helper to shuffle array
+const shuffleArray = (array: any[]) => {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+};
+
+const allProjects = shuffleArray([
+    ...existingProjects,
+    ...Object.values(floorPlanProjects),
+    ...Object.values(interiorProjects)
+]);
 
 const categories = ['All', 'Architectural', 'Fluid Structures', 'Interior Designs', 'Floor Plans & MEP'];
 

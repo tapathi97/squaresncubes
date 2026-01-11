@@ -29,7 +29,7 @@ export function Contact() {
                         </div>
                         <div>
                             <h3 className="font-bold text-white mb-2">Phone</h3>
-                            <p className="text-gray-400">+1 (555) 000-0000</p>
+                            <p className="text-gray-400">+91 93479 54461</p>
                         </div>
                     </div>
                 </div>

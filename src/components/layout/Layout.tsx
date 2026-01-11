@@ -24,12 +24,12 @@ export function Layout({ children }: LayoutProps) {
                         <div className="flex flex-col gap-2">
                             <span className="text-white font-semibold">Contact</span>
                             <span>hello@thesquaresncubes.com</span>
-                            <span>+1 (555) 123-4567</span>
+                            <span>+91 93479 54461</span>
                         </div>
                         <div className="flex flex-col gap-2">
                             <span className="text-white font-semibold">Socials</span>
-                            <a href="#" className="hover:text-white transition-colors">Instagram</a>
-                            <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
+                            <a href="https://www.instagram.com/squares_n_cubes_studio/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
+                            <a href="https://www.linkedin.com/company/squares-n-cubes" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
                         </div>
                     </div>
                 </div>

@@ -5,11 +5,8 @@ import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 const navItems = [
-    { name: 'Home', path: '/' },
     { name: 'Portfolio', path: '/portfolio' },
     { name: 'Services', path: '/services' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' },
 ];
 
 export function Navbar() {
@@ -23,7 +20,7 @@ export function Navbar() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 md:py-6 bg-black/50 backdrop-blur-md border-b border-white/10"
         >
-            <Link to="/" className="text-2xl font-bold tracking-tighter text-white z-50">
+            <Link to="/" className="text-2xl font-bold tracking-tighter text-white z-50 hover:text-gray-300 transition-colors">
                 Squares<span className="text-gray-400">N</span>Cubes
             </Link>
 
@@ -52,7 +49,7 @@ export function Navbar() {
             {/* Mobile Nav Toggle */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="md:hidden z-50 text-white"
+                className="md:hidden relative z-[70] text-white"
             >
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -64,7 +61,7 @@ export function Navbar() {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="fixed inset-0 bg-black z-40 flex flex-col items-center justify-center gap-8 md:hidden"
+                        className="fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] flex flex-col items-center justify-center gap-8 md:hidden"
                     >
                         {navItems.map((item) => (
                             <Link

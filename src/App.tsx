@@ -5,9 +5,17 @@ import { Portfolio } from './pages/Portfolio';
 import { Services } from './pages/Services';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
+import ScrollToTop from './components/ScrollToTop';
+
+import { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { SplashScreen } from './components/SplashScreen';
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+    // Keep context menu disable
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
     };
@@ -19,15 +27,21 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        {/* Add other routes here later */}
-        <Route path="*" element={<Home />} />
-      </Routes>
+      <AnimatePresence mode="wait">
+        {loading && <SplashScreen onComplete={() => setLoading(false)} />}
+      </AnimatePresence>
+      <ScrollToTop />
+      {!loading && (
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          {/* Add other routes here later */}
+          <Route path="*" element={<Home />} />
+        </Routes>
+      )}
     </BrowserRouter>
   );
 }
